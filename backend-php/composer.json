@@ -1,0 +1,32 @@
+{
+    "name": "challenge-01/grpc-echo",
+    "description": "Challenge 01: PHP gRPC Echo Server with React Frontend",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": ">=7.3",
+        "ext-grpc": "*",
+        "ext-protobuf": "*",
+        "spiral/roadrunner": "^1.8",
+        "spiral/php-grpc": "^1.4",
+        "spiral/goridge": "^2.4",
+        "google/protobuf": "^3.12",
+        "grpc/grpc": "^1.30",
+        "symfony/console": "^4.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Challenge01\\": "src/",
+            "Proto\\": "proto/"
+        }
+    },
+    "scripts": {
+        "start": "php server.php",
+        "dev": "php server.php --env=development",
+        "generate-proto": "protoc --php_out=proto --grpc_out=proto --plugin=protoc-gen-grpc=/usr/local/bin/grpc_php_plugin proto/echo.proto",
+        "test": "phpunit tests"
+    }
+}

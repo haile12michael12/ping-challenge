@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  backend:
+    build:
+      context: ./backend-php
+    ports:
+      - "50051:50051"
+    volumes:
+      - ./backend-php:/var/www/app
+    networks:
+      - app-network
+
+  envoy:
+    image: envoyproxy/envoy:v1.22.0
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./envoy.yaml:/etc/envoy/envoy.yaml
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./frontend-react
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend-react:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+      - envoy
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
