@@ -4,16 +4,20 @@ services:
     build:
       context: ./services/backend
       dockerfile: Dockerfile
-    container_name: ping-backend
-    restart: unless-stopped
+    container_name: ping-backend-dev
     ports:
       - "50051:50051"
+    volumes:
+      - ./services/backend:/var/www/app:cached
+      - /var/www/app/vendor
+    environment:
+      - APP_ENV=development
     networks:
       - pingnet
 
   envoy:
     image: envoyproxy/envoy:v1.29-latest
-    container_name: ping-envoy
+    container_name: ping-envoy-dev
     depends_on:
       - backend
     volumes:
@@ -24,17 +28,17 @@ services:
       - pingnet
 
   frontend:
-    build:
-      context: ./services/frontend
-      dockerfile: Dockerfile
-    container_name: ping-frontend
-    depends_on:
-      - envoy
+    image: node:18-alpine
+    container_name: ping-frontend-dev
+    working_dir: /app
+    volumes:
+      - ./services/frontend:/app:cached
+      - /app/node_modules
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port 5173"
     environment:
-      # When building the frontend image we point the app to the proxy service by its container name
       - VITE_PROXY_URL=http://envoy:3001
     ports:
-      - "3000:3000"
+      - "5173:5173"
     networks:
       - pingnet
 

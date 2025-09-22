@@ -7,6 +7,8 @@ service EchoService {
     rpc StreamEcho(stream EchoRequest) returns (stream EchoResponse);
     rpc GetStats(StatsRequest) returns (StatsResponse);
     rpc HealthCheck(HealthRequest) returns (HealthResponse);
+    rpc GetMessageHistory(HistoryRequest) returns (HistoryResponse);
+    rpc SearchMessageHistory(SearchRequest) returns (HistoryResponse);
 }
 
 message EchoRequest {
@@ -50,4 +52,27 @@ message HealthResponse {
     Status status = 1;
     string message = 2;
     map<string, string> details = 3;
+}
+
+message HistoryRequest {
+    int32 limit = 1;
+    int32 offset = 2;
+}
+
+message SearchRequest {
+    string query = 1;
+    int32 limit = 2;
+}
+
+message HistoryResponse {
+    repeated MessageHistoryEntry messages = 1;
+    int32 total_count = 2;
+}
+
+message MessageHistoryEntry {
+    string id = 1;
+    string original_message = 2;
+    string processed_message = 3;
+    int64 timestamp = 4;
+    map<string, string> metadata = 5;
 }

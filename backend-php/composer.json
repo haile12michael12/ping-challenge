@@ -1,5 +1,5 @@
 {
-    "name": "challenge-01/grpc-echo",
+    "name": "challenge-1/grpc-echo",
     "description": "Challenge 01: PHP gRPC Echo Server with React Frontend",
     "type": "project",
     "license": "MIT",
